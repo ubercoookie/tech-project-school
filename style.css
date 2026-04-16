@@ -16,6 +16,6 @@ body {
 .column4 {
     background-color: #D9C7B8;
 }
-@page {
-  size:1438px 636px;
+p{
+    font-size:4rem;
 }
