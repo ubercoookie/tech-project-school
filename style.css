@@ -1,0 +1,21 @@
+body {
+    padding: 0px
+}
+.column1 {
+    background-color: #40362D;
+}
+.column2 {
+    background-color: #A6907C;
+}
+.column-main {
+    background-color: #F2E6D8;
+}
+.column3 {
+    background-color: #BFAE99;
+}
+.column4 {
+    background-color: #D9C7B8;
+}
+@page {
+  size:1438px 636px;
+}
