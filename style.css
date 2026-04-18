@@ -19,3 +19,16 @@ body {
 p{
     font-size:4rem;
 }
+p2{
+    font-size:2rem;
+}
+.btn-custom {
+    background-color: #40362D;
+    color: white;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #2F271F ;
+    color: white;
+}
