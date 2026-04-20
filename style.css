@@ -26,6 +26,7 @@ p2{
     background-color: #40362D;
     color: white;
     border: none;
+    padding: 20px 80px 20px 80px;
 }
 
 .btn-custom:hover {
