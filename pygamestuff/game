@@ -1,0 +1,40 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Set up display (width, height)
+screen_width = 2050
+screen_height = 1220
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Set background color (R, G, B) — white in this case
+background_color = (0, 255, 255)
+
+# Load image (make sure the image file is in the same folder)
+player_image = pygame.image.load("image.png")
+
+# Optional: resize image
+player_image = pygame.transform.scale(player_image, (100, 100))
+
+
+# Main loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Fill screen with background color
+    screen.fill(background_color)
+
+    # Draw image at (x, y)
+    screen.blit(player_image, (350, 250))
+
+    # Update the display
+    pygame.display.flip()
+
+# Quit Pygame
+pygame.quit()
+sys.exit()
