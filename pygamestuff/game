@@ -1,23 +1,80 @@
 import pygame
 import sys
+import math 
+import random
 
-# Initialize Pygame
 pygame.init()
+
+clock = pygame.time.Clock()
+x = 0
+y = 0
+time = 0
+
 
 # Set up display (width, height)
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-# Set background color (R, G, B) — white in this case
-background_color = (0, 255, 255)
-
-# Load image (make sure the image file is in the same folder)
 player_image = pygame.image.load("image.png")
 
 # Optional: resize image
 player_image = pygame.transform.scale(player_image, (100, 100))
 
+class Player(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()  # Sprite superclass initialization
+        self.image = pygame.image.load("image.png").convert_alpha()  # Load player image
+        self.image = pygame.transform.scale(self.image, (100,100))
+        self.rect = self.image.get_rect()  # Create rect from image
+        self.rect.topleft = (x, y)  # Set initial position. You might like to use center instead of topleft
+        self.speed = 1 # Movement speed
+
+    def update(self, keys):  # Called every frame
+        self.vibe_y = y + math.sin(time * 3) * 10
+        self.vibe_x = x + math.sin(time * 2) * 5
+
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += self.speed
+        if keys[pygame.K_UP]:
+            self.vibe_y -= self.speed
+        if keys[pygame.K_DOWN]:
+            self.vibe_y += self.speed
+
+        self.rect.y += self.vibe_y
+
+       
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.Surface((50, 50))
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect(topleft=(x, y))
+
+        # Random direction and speed
+        self.dx = random.choice([-3, -2, -1, 1, 2, 3])
+        self.dy = random.choice([-3, -2, -1, 1, 2, 3])
+
+    def update(self):
+        # Move sprite
+        self.rect.x += self.dx
+        self.rect.y += self.dy
+
+        # Bounce off edges
+        if self.rect.left <= 0 or self.rect.right >= 800:
+            self.dx *= -1  # reverse x direction
+        if self.rect.top <= 0 or self.rect.bottom >= 600:
+            self.dy *= -1  # reverse y direction
+
+
+
+player = Player(400, 300)
+enemy = Enemy(400, 300)
+all_sprites = pygame.sprite.Group() 
+all_sprites.add(player)  
 
 # Main loop
 running = True
@@ -25,15 +82,26 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    
 
-    # Fill screen with background color
-    screen.fill(background_color)
+    
 
-    # Draw image at (x, y)
-    screen.blit(player_image, (350, 250))
+    #screen.blit(player_image, (vibe_x, vibe_y))
 
-    # Update the display
     pygame.display.flip()
+    time += clock.get_time() / 1000
+
+    keys = pygame.key.get_pressed()
+    player.update(keys)
+    enemy.update()
+
+    
+    # screen.fill(background_color)
+    all_sprites.draw(screen)     # Draw all sprites
+    pygame.display.flip()        # Update display
+    clock.tick(60)               # Limit FPS
+
+
 
 # Quit Pygame
 pygame.quit()
