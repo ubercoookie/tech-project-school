@@ -9,18 +9,18 @@ screen = pygame.display.set_mode((1600, 800))
 clock = pygame.time.Clock()
 score = 0
 font = pygame.font.SysFont(None, 36)  # You can choose font size here
-
+magazine = 30
 
 # --- Sprite Classes ---
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((50, 50))
-        self.image.fill((0, 0, 255))  # Blue
+        self.image = pygame.image.load("player ship.png")
         self.rect = self.image.get_rect(topleft=(x, y))
         self.speed = 7
-        self.shoot_delay = 10
+        self.shoot_delay = 5
         self.delay = self.shoot_delay
+        self.magazine = 30
         
 
     def update(self, keys):
@@ -30,21 +30,23 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_d]: self.rect.x += self.speed
         if keys[pygame.K_w]: self.rect.y -= self.speed
         if keys[pygame.K_s]: self.rect.y += self.speed
+        if keys[pygame.K_r]: pygame.time.delay(1), self.magazine == 30
         if keys[pygame.K_SPACE]: 
-            if self.delay == self.shoot_delay:
+            if self.delay == self.shoot_delay and self.magazine > 0:
                 self.shoot()
                 self.delay = 0
+                self.magazine -= 1
             
     
     def shoot(self):
         #print("Shooting", self.num)
         #self.num+=1
-        b1 = Bullet(self.rect.centerx, self.rect.centery, 0, -1)
-        b2 = Bullet(self.rect.centerx, self.rect.centery, 1, 0)
+        #b1 = Bullet(self.rect.centerx, self.rect.centery, 0, -1)
+        #b2 = Bullet(self.rect.centerx, self.rect.centery, 1, 0)
         b3 = Bullet(self.rect.centerx, self.rect.centery, -1, 0)
-        b4 = Bullet(self.rect.centerx, self.rect.centery, 0, 1)
-        all_sprites.add(b1, b2, b3, b4)
-        bullets.add(b1, b2, b3, b4)
+        #b4 = Bullet(self.rect.centerx, self.rect.centery, 0, 1)
+        all_sprites.add( b3)
+        bullets.add(b3)
         
 
 class Enemy(pygame.sprite.Sprite):
@@ -118,7 +120,7 @@ class Bullet(pygame.sprite.Sprite):
 
 
 # --- Create Sprites ---
-player = Player(100, 100)
+player =  Player(100, 50)
 # addingenemies one by one
 enemy = Enemy(400, 300)
 enemy2 = Enemy(500, 400)
@@ -128,8 +130,8 @@ enemies.add(enemy, enemy2, enemy3)
 
 enemies = pygame.sprite.Group()
 # Spawn 10 enemies at random positions
-for _ in range(20):
-    x = random.randint(0, 750)  # leave space for 50x50 size
+for _ in range(40):
+    x = random.randint(0, 1550)  # leave space for 50x50 size
     y = random.randint(0, 750)
     enemy = Enemy(x, y)
     enemies.add(enemy)
@@ -139,8 +141,8 @@ for _ in range(20):
 playerGroup = pygame.sprite.Group(player) # for killing player using hits = ...)
 all_sprites = pygame.sprite.Group(player, enemies)
 bullets = pygame.sprite.Group()
-#all_sprites.add(bullet)
-#bullets.add(bullet)
+all_sprites.add(Bullet)
+bullets.add(Bullet)
 
 #spawning enemies
 spawn_timer = 0
@@ -151,14 +153,10 @@ running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                # Fire from center-top of player
-                b1 = Bullet(player.rect.centerx, player.rect.centery, 0, -1)
-                b2 = Bullet(player.rect.centerx, player.rect.centery, 1, 0)
+            if event.key == pygame.K_SPACE and magazine > 0:
                 b3 = Bullet(player.rect.centerx, player.rect.centery, -1, 0)
-                b4 = Bullet(player.rect.centerx, player.rect.centery, 0, 1)
-                all_sprites.add(b1, b2, b3, b4)
-                bullets.add(b1, b2, b3, b4)
+                all_sprites.add (b3)
+                bullets.add( b3)
         
 
         if event.type == pygame.QUIT:
@@ -192,19 +190,17 @@ while running:
 
     if pygame.sprite.spritecollide(player, enemies, True):
         print("Collision detected!")
-        #pygame.sprite.spritecollide(player, enemies, True)
-        #player.kill()
-        #enemy.kill()
-        #running = False # end game
 
-    # pygame.sprite.groupcollide(enemies, playerGroup, False, True) # this line uses sprite group to kill enemy
-    if score > 0 and score % 50 == 0 and score:
-     print("upgrade choices")
-     
+    # pygame.sprite.groupcollide(enemies, playerGroup, False, True)        # this line uses sprite group to kill enemy
+    if score > 0 and score % 50 == 0:
+     print('hsgbjf')
+
     screen.fill((255, 255, 255))
     all_sprites.draw(screen)
     score_text = font.render(f"Score: {score}", True, (0, 0, 0))  # Black color
     screen.blit(score_text, (10, 10))  # Position at top-left corner
+    magazine_text = font.render(f"mag: {magazine}", True, (0, 0, 0))  # Black color
+    screen.blit(magazine_text, (-10, -10))  # Position at top-left corner
     pygame.display.flip()
     #clock.tick(60)
 
