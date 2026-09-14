@@ -20,22 +20,22 @@ class Player(pygame.sprite.Sprite):
         self.speed = 7
         self.shoot_delay = 5
         self.delay = self.shoot_delay
-        self.magazine = 30
         
 
     def update(self, keys):
+        global magazine
         if self.delay < self.shoot_delay:
             self.delay += 1
         if keys[pygame.K_a]: self.rect.x -= self.speed
         if keys[pygame.K_d]: self.rect.x += self.speed
         if keys[pygame.K_w]: self.rect.y -= self.speed
         if keys[pygame.K_s]: self.rect.y += self.speed
-        if keys[pygame.K_r]: pygame.time.delay(1), self.magazine == 30
+        if keys[pygame.K_r]: magazine = 30
         if keys[pygame.K_SPACE]: 
-            if self.delay == self.shoot_delay and self.magazine > 0:
+            if self.delay == self.shoot_delay and magazine > 0:
                 self.shoot()
                 self.delay = 0
-                self.magazine -= 1
+                magazine -= 1
             
     
     def shoot(self):
@@ -141,8 +141,8 @@ for _ in range(40):
 playerGroup = pygame.sprite.Group(player) # for killing player using hits = ...)
 all_sprites = pygame.sprite.Group(player, enemies)
 bullets = pygame.sprite.Group()
-all_sprites.add(Bullet)
-bullets.add(Bullet)
+# all_sprites.add(Bullet)
+# bullets.add(Bullet)
 
 #spawning enemies
 spawn_timer = 0
@@ -200,7 +200,7 @@ while running:
     score_text = font.render(f"Score: {score}", True, (0, 0, 0))  # Black color
     screen.blit(score_text, (10, 10))  # Position at top-left corner
     magazine_text = font.render(f"mag: {magazine}", True, (0, 0, 0))  # Black color
-    screen.blit(magazine_text, (-10, -10))  # Position at top-left corner
+    screen.blit(magazine_text, (10, 50))  # Position at top-left corner
     pygame.display.flip()
     #clock.tick(60)
 
