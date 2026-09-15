@@ -86,8 +86,7 @@ class Enemy(pygame.sprite.Sprite):
 class Enemy2(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((50, 50), pygame.SRCALPHA)  # transparent bg
-        pygame.draw.circle(self.image, 'green', (25,25), 20)
+        self.image = pygame.image.load("enemy ship.png")  # transparent bg
         self.rect = self.image.get_rect(topleft=(x, y))
         self.dx = 3     
 
